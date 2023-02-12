@@ -166,6 +166,25 @@ if (!isset($_SESSION['username'])) {
                 </div>
             </div>
 
+            <div class="modal fade" id="deleteLayerModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Thông báo</h4>
+                        </div>
+                        <div class="modal-body">
+                            <span>Bạn có chắc chắn muốn xoá lớp dữ liệu này?</span>
+                        </div>
+                        <div class="modal-footer no-border">
+                            <div class="text-right">
+                                <button class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary btn-sm" id="confirmDelete">Xoá</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="main-content">
                 <div class="container-fluid">
                     <div class="row mrg-top-5">
@@ -176,6 +195,12 @@ if (!isset($_SESSION['username'])) {
                                     <!-- DOM Option -->
                                 </select>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button id="deleteLayer" class="btn btn-danger"
+                                disabled data-toggle="modal" data-target="#deleteLayerModal">
+                                Xoá lớp dữ liệu
+                            </button>
                         </div>
                     </div>
                     <div id="containerTable" class="row mrg-top-20" style="display: none">

@@ -1,6 +1,7 @@
 select_1_option("#selectLayers", "Chọn lớp dữ liệu", "services/listOfLayers.php", "layer_name")
 
 $("#selectLayers").on("change", function () {
+    $("#deleteLayer").prop("disabled", false)
     $("#containerTable").show()
 
     if ($.fn.DataTable.isDataTable('#tableOfLayers')) {
@@ -63,4 +64,19 @@ $("#selectLayers").on("change", function () {
         let gid = tableOfLayers.row(this).data()[0]
         window.open('index.php?layer=' + selected + '&gid=' + gid, '_blank')
     });
+})
+
+$("#confirmDelete").on("click", function () {
+    let selected = $("#selectLayers").val()
+    $.ajax({
+        type: "GET",
+        url: "services/dropLayer.php?table_layer=" + selected,
+        async: false,
+        success: function (data) {
+            alert("Đã xoá dữ liệu")
+        }
+    })
+
+    $("#deleteLayerModal").modal("hide")
+    window.location.reload()
 })

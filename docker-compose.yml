@@ -1,0 +1,41 @@
+version: '3'
+services:
+  xampp:
+    image: tomsik68/xampp
+    ports:
+      - "81:80"
+    volumes:
+      - ./config/php.ini:/opt/lampp/etc/php.ini
+      - .:/www
+    networks:
+      - api-upload-spatial-data
+
+  db:
+    build:
+      context: .
+      dockerfile: dockerfiles/postgres.dockerfile
+      args:
+        - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+        - POSTGRES_DB=$POSTGRES_DB
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres/pgdata:/var/lib/postgresql/data
+    env_file: .env
+    networks:
+      - api-upload-spatial-data
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: dockerfiles/fastapi.dockerfile
+    restart: always
+    ports:
+      - "5000:5000"
+    networks:
+      - api-upload-spatial-data
+
+networks:
+  api-upload-spatial-data:
+    driver: bridge

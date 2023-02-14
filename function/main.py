@@ -56,7 +56,7 @@ def createTableFromGDF(gdf, conn, cur, name, schema, geom_name, srid):
                 create_table_query += ', ' + column + ' TEXT'
 
         # Drop Table if Exists
-        drop_table_query = 'DROP TABLE IF EXIS ' + table_name
+        drop_table_query = 'DROP TABLE IF EXISTS ' + table_name
         cur.execute(drop_table_query)
 
         create_table_query = 'CREATE TABLE ' + table_name + '(' + create_table_query + ')'

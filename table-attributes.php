@@ -77,6 +77,14 @@ if (!isset($_SESSION['username'])) {
                             <span class="title">Bản đồ 360</span>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="" href="indexPointCloud.php">
+                            <span class="icon-holder">
+                                <i class="ti-map-alt"></i>
+                            </span>
+                            <span class="title">Bản đồ PointCloud</span>
+                        </a>
+                    </li>
                     <li class="nav-item active">
                         <a class="" href="table-attributes.php">
                             <span class="icon-holder">

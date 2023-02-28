@@ -4,3 +4,4 @@ venv
 zip
 unzip
 postgres/pgdata
+assets/pages/js/indexPointCloud/data

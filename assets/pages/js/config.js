@@ -1,6 +1,6 @@
 /*--- API URL---*/
-// var apiURL = 'http://localhost:5000/'
-var apiURL = 'https://kong2_sinhthainambo.girs.vn/geodetic-upload/'
+var apiURL = 'http://localhost:5000/'
+// var apiURL = 'https://kong2_sinhthainambo.girs.vn/geodetic-upload/'
 var config_language_datatables = {
     pagingType: "full_numbers",
     search: '<span>Tìm kiếm:</span> _INPUT_',

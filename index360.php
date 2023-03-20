@@ -113,6 +113,14 @@ if (!isset($_SESSION['username'])) {
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="" href="indexDem.php">
+                            <span class="icon-holder">
+                                <i class="ti-map-alt"></i>
+                            </span>
+                            <span class="title">Bản đồ DEM</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="" href="table-attributes.php">
                             <span class="icon-holder">
                                 <i class="fa fa-table"></i>

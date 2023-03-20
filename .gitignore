@@ -5,3 +5,4 @@ zip
 unzip
 postgres/pgdata
 assets/pages/js/indexPointCloud/data
+assets/pages/js/indexDem/data

@@ -113,6 +113,14 @@ if (!isset($_SESSION['username'])) {
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="" href="indexDem.php">
+                            <span class="icon-holder">
+                                <i class="ti-map-alt"></i>
+                            </span>
+                            <span class="title">Bản đồ DEM</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="" href="table-attributes.php">
                             <span class="icon-holder">
                                 <i class="fa fa-table"></i>
@@ -204,8 +212,16 @@ if (!isset($_SESSION['username'])) {
             <div class="main-content">
                 <div class="full-container">
                     <div id="map">
-                        <iframe
+                        <!--<iframe
                                 src="https://www.arcgis.com/apps/CEWebViewer/viewer.html?3dWebScene=fa34bc625fff435db60719ffc68559d2&fbclid=IwAR1fz1ecZHpvNtaOg3jKKl4O4bRiEGwWRP9Xyoqf3c-LNWNymMRgGx1UYV0"
+                                title=""
+                                style="overflow:hidden; height:calc(100vh - 71px); width:100%"
+                                width="100%"
+                                height="100%"
+                        >
+                        </iframe>-->
+                        <iframe
+                                src="https://www.arcgis.com/apps/CEWebViewer/viewer.html?3dWebScene=7cd28c0f47504b298c5731a72374cc9f"
                                 title=""
                                 style="overflow:hidden; height:calc(100vh - 71px); width:100%"
                                 width="100%"

@@ -5,7 +5,8 @@ CREATE TABLE users
     id INTEGER,
     username CHAR(255),
     password CHAR(255),
-    fullname CHAR(255)
+    fullname CHAR(255),
+    role CHAR(255)
 );
 
 INSERT INTO "users" ("id", "username", "password", "fullname", "role") VALUES

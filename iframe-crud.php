@@ -29,36 +29,9 @@ if (!isset($_SESSION['username'])) {
     <link href="assets/app/css/animate.min.css" rel="stylesheet"/>
     <link href="assets/app/css/app.css" rel="stylesheet"/>
 
-    <!-- Map Plugins CSS -->
-    <!-- <link href="vendor/map/css/leaflet.css" rel="stylesheet"/>
-    <link href="vendor/map/css/leaflet.groupedlayercontrol.css" rel="stylesheet"/>
-    <link href="vendor/map/css/leaflet.zoomhome.css" rel="stylesheet"/>
-    <link href="vendor/map/css/leaflet-geoman.css" rel="stylesheet"/>
-    <link href="vendor/map/css/leaflet-gps.css" rel="stylesheet"/>
-    <link href="vendor/map/css/leaflet-measure.css" rel="stylesheet"/>
-    <link href="vendor/map/css/leaflet-sidebar.css" rel="stylesheet"/>
-    <link href="vendor/map/css/Control.FullScreen.css" rel="stylesheet"/>
-    <link href="vendor/map/css/Control.Geocoder.css" rel="stylesheet"/>
-    <link href="vendor/map/css/Control.LatLng.css" rel="stylesheet"/>
-    <link href="vendor/map/css/easy-button.css" rel="stylesheet"/>
-    <link href="vendor/map/css/L.Control.Basemaps.css" rel="stylesheet"/>
-    <link href="vendor/map/css/L.Control.Locate.css" rel="stylesheet"/>
-    <link href="vendor/map/css/L.Icon.Pulse.css" rel="stylesheet"/>
-    <link href="vendor/map/css/MarkerCluster.css" rel="stylesheet"/> -->
-
-    <!--<link href="assets/pages/js/index3d/OSMBuildings.css" rel="stylesheet">-->
-
-    <!-- Map Custom CSS -->
-    <link href="assets/pages/css/mapStyle.css" rel="stylesheet"/>
-    <style>
-        .osmb, .osmb-viewport {
-            width: 100%;
-            height: 100%;
-        }
-        .osmb-attribution {
-            display: none;
-        }
-    </style>
+    <!-- Page Plugins CSS -->
+    <link href="vendor/plugin/selectize/dist/css/selectize.default.css" rel="stylesheet">
+    <link href="vendor/plugin/datatables/media/css/jquery.dataTables.css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -88,22 +61,6 @@ if (!isset($_SESSION['username'])) {
                             <span class="title">Bản đồ</span>
                         </a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="" href="index3d.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ 3D</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="index360.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ 360</span>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="" href="indexPointCloud.php">
                             <span class="icon-holder">
@@ -120,22 +77,73 @@ if (!isset($_SESSION['username'])) {
                             <span class="title">Bản đồ DEM</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="" href="table-attributes.php">
-                            <span class="icon-holder">
-                                <i class="fa fa-table"></i>
-                            </span>
-                            <span class="title">Các lớp dữ liệu</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="upload.php">
-                            <span class="icon-holder">
-                                <i class="fa fa-upload"></i>
-                            </span>
-                            <span class="title">Upload</span>
-                        </a>
-                    </li>
+
+                    <?php
+                    require_once('services/config.php');
+                    $query = "SELECT * FROM iframe_layers";
+                    if (isset($pg_connect)) {
+                        $result = pg_query($pg_connect, $query);
+
+                        if ($result) {
+                            $data = pg_fetch_all($result);
+
+                            if ($data) {
+                                // In danh sách iframe layers
+                                foreach ($data as $row) {
+                                    echo '<li class="nav-item">';
+                                    echo '<a class="" href="#iframe_' . $row['id'] . '">';
+                                    echo '<span class="icon-holder">';
+                                    echo '<i class="ti-map-alt"></i>';
+                                    echo '</span>';
+                                    echo '<span class="title">&nbsp;' . $row['name_iframe'] . '</span>';
+                                    echo '</a>';
+                                    echo '</li>';
+                                }
+                            } else {
+                                echo "";
+                            }
+                        } else {
+                            echo "";
+                        }
+                    } else {
+                        echo "";
+                    }
+                    ?>
+
+                    <?php
+                    require_once('services/config.php');
+                    if (isset($_SESSION['role'])) {
+                        $role_user = $_SESSION['role'];
+                        if ($role_user === 'admin') {
+                            echo '
+                             <li class="nav-item">
+                                <a class="" href="table-attributes.php">
+                                    <span class="icon-holder">
+                                        <i class="fa fa-table"></i>
+                                    </span>
+                                    <span class="title">Các lớp dữ liệu</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="" href="iframe-crud.php">
+                                    <span class="icon-holder">
+                                        <i class="fa fa-table"></i>
+                                    </span>
+                                    <span class="title">Các lớp iframe</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="" href="upload.php">
+                                    <span class="icon-holder">
+                                        <i class="fa fa-upload"></i>
+                                    </span>
+                                    <span class="title">Upload</span>
+                                </a>
+                            </li>
+                            ';
+                        }
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
@@ -209,26 +217,55 @@ if (!isset($_SESSION['username'])) {
                 </div>
             </div>
 
-            <div class="main-content">
-                <div class="full-container">
-                    <div id="map">
-                        <!--<iframe
-                                src="https://www.arcgis.com/apps/CEWebViewer/viewer.html?3dWebScene=fa34bc625fff435db60719ffc68559d2&fbclid=IwAR1fz1ecZHpvNtaOg3jKKl4O4bRiEGwWRP9Xyoqf3c-LNWNymMRgGx1UYV0"
-                                title=""
-                                style="overflow:hidden; height:calc(100vh - 71px); width:100%"
-                                width="100%"
-                                height="100%"
-                        >
-                        </iframe>-->
-                        <iframe
-                                src="https://www.arcgis.com/apps/CEWebViewer/viewer.html?3dWebScene=7cd28c0f47504b298c5731a72374cc9f"
-                                title=""
-                                style="overflow:hidden; height:calc(100vh - 71px); width:100%"
-                                width="100%"
-                                height="100%"
-                        >
-                        </iframe>
+            <div class="modal fade" id="deleteLayerModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Thông báo</h4>
+                        </div>
+                        <div class="modal-body">
+                            <span>Bạn có chắc chắn muốn xoá lớp dữ liệu này?</span>
+                        </div>
+                        <div class="modal-footer no-border">
+                            <div class="text-right">
+                                <button class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary btn-sm" id="confirmDelete">Xoá</button>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="container-fluid">
+                    <h2>Thêm iframe layer</h2>
+                    <form id="create-form">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="create-iframe-url">URL:</label>
+                                <input type="text" id="create-iframe-url" name="iframe_url" required class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="create-name-iframe">Tên iframe:</label>
+                                <input type="text" id="create-name-iframe" name="name_iframe" required class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-success" type="submit" style="margin-top: 1.755rem">Thêm</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <h2 class="mrg-top-20">Danh sách iframe layers</h2>
+                    <table id="iframe-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>URL</th>
+                            <th>Tên iframe</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
@@ -238,61 +275,9 @@ if (!isset($_SESSION['username'])) {
 <script src="assets/app/js/vendor.js"></script>
 <script src="assets/app/js/app.min.js"></script>
 
-<!-- Map Plugins JS
-<script src="vendor/map/js/leaflet.js"></script> -->
+<script src="vendor/plugin/selectize/dist/js/standalone/selectize.min.js"></script>
+<script src="vendor/plugin/datatables/media/js/jquery.dataTables.js"></script>
 
-<!-- wrld3d -->
-<script src="https://unpkg.com/wrld.js@1.x.x"></script>
-
-<!-- OSM Building -->
-<script src="assets/pages/js/index3d/OSMBuildings.js"></script>
-
-<!--<script src="vendor/map/js/leaflet_old.js'"></script>
-<script src="vendor/map/js/leaflet-src.esm.js"></script>
-<script src="vendor/map/js/leaflet-src.esm.js.map"></script>
-<script src="vendor/map/js/leaflet-src.js"></script>
-<script src="vendor/map/js/leaflet-src.js.map"></script>
-<script src="vendor/map/js/leaflet.js.map"></script>
-<script src="vendor/map/js/leaflet.ajax.js"></script>-->
-<script src="vendor/map/js/leaflet.ajax.min.js"></script>
-<script src="vendor/map/js/leaflet.pattern.js"></script>
-<script src="vendor/map/js/Control.FullScreen.js"></script>
-<script src="vendor/map/js/Control.Geocoder.js"></script>
-<script src="vendor/map/js/Control.LatLng.js"></script>
-<script src="vendor/map/js/easy-button.js"></script>
-<script src="vendor/map/js/geojson-bbox.min.js"></script>
-<script src="vendor/map/js/L.Control.Basemaps-min.js"></script>
-<!--<script src="vendor/map/js/geojson-bbox.js"></script>
-<script src="vendor/map/js/geojson-bbox.js.map"></script>
-<script src="vendor/map/js/L.Control.Basemaps.js"></script>-->
-<script src="vendor/map/js/L.Control.Locate.js"></script>
-<script src="vendor/map/js/L.Geoserver.js"></script>
-<script src="vendor/map/js/L.Icon.Pulse.js"></script>
-<script src="vendor/map/js/L.Map.Sync.js"></script>
-<script src="vendor/map/js/rbush.js"></script>
-<script src="vendor/map/js/labelgun.js"></script>
-<script src="vendor/map/js/leaflet-bounce.js"></script>
-<script src="vendor/map/js/leaflet-geoman.min.js"></script>
-<!--<script src="vendor/map/js/leaflet-google.js"></script>
-<script src="vendor/map/js/leaflet-gps.js"></script>-->
-<script src="vendor/map/js/leaflet-measure.js"></script>
-<script src="vendor/map/js/leaflet-sidebar.js"></script>
-<script src="vendor/map/js/Leaflet.Control.Custom.js"></script>
-<script src="vendor/map/js/leaflet.groupedlayercontrol.js"></script>
-<script src="vendor/map/js/leaflet.markercluster.js"></script>
-<!--<script src="vendor/map/js/leaflet.markercluster-src.js"></script>
-<script src="vendor/map/js/leaflet.markercluster-src.js.map"></script>
-<script src="vendor/map/js/leaflet.markercluster.js.map"></script>-->
-<script src="vendor/map/js/leaflet.zoomhome.js"></script>
-<script src="vendor/map/js/geotiff.js"></script>
-<script src="vendor/map/js/plotty.js"></script>
-<script src="vendor/map/js/leaflet-geotiff.js"></script>
-<script src="vendor/map/js/leaflet.textpath.js"></script>
-<script src="vendor/map/js/leaflet.featuregroup.subgroup.js"></script>
-<script src="vendor/map/js/proj4.js"></script>
-<!--<script src="vendor/map/js/leaflet-geotiff-plotty.js"></script>
-<script src="vendor/map/js/leaflet-geotiff-vector-arrows.js"></script>-->
-
-<!-- Map 3D Custom JS -->
-<!--<script src="assets/pages/js/index3d/index3d.js"></script>-->
+<script src="assets/pages/js/config.js"></script>
+<script src="assets/pages/js/iframe-crud/main.js"></script>
 </body>

@@ -9,6 +9,7 @@ $query = "SELECT table_name as layer_name FROM information_schema.tables WHERE t
                                           and (table_name <> 'geography_columns' 
                                                    and table_name <> 'geometry_columns' 
                                                    and table_name <> 'spatial_ref_sys'
+                                                   and table_name <> 'iframe_layers'
                                                    and table_name <> 'users')";
 if (isset($pg_connect)) {
     $result = pg_query($pg_connect, $query);

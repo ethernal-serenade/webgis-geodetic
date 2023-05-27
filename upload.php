@@ -58,37 +58,88 @@ if (!isset($_SESSION['username'])) {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="" href="index3d.php">
+                        <a class="" href="indexPointCloud.php">
                             <span class="icon-holder">
                                 <i class="ti-map-alt"></i>
                             </span>
-                            <span class="title">Bản đồ 3D</span>
+                            <span class="title">Bản đồ PointCloud</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="" href="index360.php">
+                        <a class="" href="indexDem.php">
                             <span class="icon-holder">
                                 <i class="ti-map-alt"></i>
                             </span>
-                            <span class="title">Bản đồ 360</span>
+                            <span class="title">Bản đồ DEM</span>
                         </a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="" href="table-attributes.php">
-                            <span class="icon-holder">
-                                <i class="fa fa-table"></i>
-                            </span>
-                            <span class="title">Các lớp dữ liệu</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="upload.php">
-                            <span class="icon-holder">
-                                <i class="fa fa-upload"></i>
-                            </span>
-                            <span class="title">Upload</span>
-                        </a>
-                    </li>
+
+                    <?php
+                    require_once('services/config.php');
+                    $query = "SELECT * FROM iframe_layers";
+                    if (isset($pg_connect)) {
+                        $result = pg_query($pg_connect, $query);
+
+                        if ($result) {
+                            $data = pg_fetch_all($result);
+
+                            if ($data) {
+                                // In danh sách iframe layers
+                                foreach ($data as $row) {
+                                    echo '<li class="nav-item">';
+                                    echo '<a class="" href="#iframe_' . $row['id'] . '">';
+                                    echo '<span class="icon-holder">';
+                                    echo '<i class="ti-map-alt"></i>';
+                                    echo '</span>';
+                                    echo '<span class="title">&nbsp;' . $row['name_iframe'] . '</span>';
+                                    echo '</a>';
+                                    echo '</li>';
+                                }
+                            } else {
+                                echo "";
+                            }
+                        } else {
+                            echo "";
+                        }
+                    } else {
+                        echo "";
+                    }
+                    ?>
+
+                    <?php
+                    require_once('services/config.php');
+                    if (isset($_SESSION['role'])) {
+                        $role_user = $_SESSION['role'];
+                        if ($role_user === 'admin') {
+                            echo '
+                             <li class="nav-item">
+                                <a class="" href="table-attributes.php">
+                                    <span class="icon-holder">
+                                        <i class="fa fa-table"></i>
+                                    </span>
+                                    <span class="title">Các lớp dữ liệu</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="" href="iframe-crud.php">
+                                    <span class="icon-holder">
+                                        <i class="fa fa-table"></i>
+                                    </span>
+                                    <span class="title">Các lớp iframe</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="" href="upload.php">
+                                    <span class="icon-holder">
+                                        <i class="fa fa-upload"></i>
+                                    </span>
+                                    <span class="title">Upload</span>
+                                </a>
+                            </li>
+                            ';
+                        }
+                    }
+                    ?>
                 </ul>
             </div>
         </div>

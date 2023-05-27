@@ -28,6 +28,7 @@ if (isset($_POST['btn_submit'])) {
                 while ($row_data = pg_fetch_assoc($query)) {
                     $_SESSION['userid'] = $row_data['id'];
                     $_SESSION['username'] = $row_data['username'];
+                    $_SESSION['role'] = $row_data['role'];
                 }
                 header('Location: index.php');
             }

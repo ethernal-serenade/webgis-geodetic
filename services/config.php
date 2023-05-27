@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /*$pg_connect = pg_connect('host=localhost
-            port=5432
+            port=5433
             dbname=webgis-geodetic
             user=postgres
             password=postgres'

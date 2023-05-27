@@ -3,7 +3,7 @@ services:
   xampp:
     image: tomsik68/xampp:7.3.7
     ports:
-      - "5061:80"
+      - "82:80"
     volumes:
       - ./config/php.ini:/opt/lampp/etc/php.ini
       - .:/www
@@ -19,7 +19,7 @@ services:
         - POSTGRES_DB=$POSTGRES_DB
     restart: always
     ports:
-      - "5438:5432"
+      - "5433:5432"
     volumes:
       - ./postgres/pgdata:/var/lib/postgresql/data
     env_file: .env
@@ -32,7 +32,7 @@ services:
       dockerfile: dockerfiles/fastapi.dockerfile
     restart: always
     ports:
-      - "5060:5000"
+      - "5000:5000"
     networks:
       - webgis-geodetic
 

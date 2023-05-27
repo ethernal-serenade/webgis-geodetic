@@ -1,14 +1,14 @@
 version: '3'
 services:
   xampp:
-    image: tomsik68/xampp
+    image: tomsik68/xampp:7.3.7
     ports:
       - "5061:80"
     volumes:
       - ./config/php.ini:/opt/lampp/etc/php.ini
       - .:/www
     networks:
-      - api-upload-spatial-data
+      - webgis-geodetic
 
   db:
     build:
@@ -24,7 +24,7 @@ services:
       - ./postgres/pgdata:/var/lib/postgresql/data
     env_file: .env
     networks:
-      - api-upload-spatial-data
+      - webgis-geodetic
 
   fastapi:
     build:
@@ -34,8 +34,8 @@ services:
     ports:
       - "5060:5000"
     networks:
-      - api-upload-spatial-data
+      - webgis-geodetic
 
 networks:
-  api-upload-spatial-data:
+  webgis-geodetic:
     driver: bridge

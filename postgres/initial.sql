@@ -15,7 +15,7 @@ INSERT INTO "users" ("id", "username", "password", "fullname", "role") VALUES
 
 CREATE TABLE iframe_layers
 (
-    id INTEGER NOT NULL DEFAULT nextval('iframe_layers_id_seq'),
+    id SERIAL,
     iframe_url CHAR(255),
     name_iframe CHAR(255)
 );

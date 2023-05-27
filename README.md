@@ -15,4 +15,4 @@ docker compose up -d
 
 ## TODO
 
-- [ ] Method add `url` and convert to `menu-item` in webgis
+- [x] Method add `url` and convert to `menu-item` in webgis

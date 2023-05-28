@@ -6,7 +6,16 @@ var table = $('#iframe-table').DataTable({
     },
     columns: [
         {data: 'id'},
-        {data: 'iframe_url'},
+        {
+            data: 'iframe_url',
+            render: function (data) {
+                if (data.length > 50) {
+                    return data.substr(0, 50) + '...';
+                } else {
+                    return data;
+                }
+            }
+        },
         {data: 'name_iframe'},
         {
             data: 'id',

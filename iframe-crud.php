@@ -32,6 +32,12 @@ if (!isset($_SESSION['username'])) {
     <!-- Page Plugins CSS -->
     <link href="vendor/plugin/selectize/dist/css/selectize.default.css" rel="stylesheet">
     <link href="vendor/plugin/datatables/media/css/jquery.dataTables.css" rel="stylesheet"/>
+
+    <style>
+        #iframe-table td {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -257,7 +263,7 @@ if (!isset($_SESSION['username'])) {
 
                     <h2 class="mrg-top-20">Danh sách iframe layers</h2>
                     <table id="iframe-table">
-                        <thead>
+                        <thead class="text-center">
                         <tr>
                             <th>ID</th>
                             <th>URL</th>

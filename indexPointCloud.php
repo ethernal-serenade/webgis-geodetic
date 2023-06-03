@@ -63,30 +63,12 @@ if (!isset($_SESSION['username'])) {
                     </div>
                 </div>
                 <ul class="side-nav-menu scrollable">
-                    <li class="nav-item active">
-                        <a class="mrg-top-15" href="index.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="indexPointCloud.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ PointCloud</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="indexDem.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ DEM</span>
-                        </a>
-                    </li>
+                    <?php
+                    require_once('config-sidebar.php');
+                    if (isset($sidebar)) {
+                        echo $sidebar;
+                    }
+                    ?>
 
                     <?php
                     require_once('services/config.php');
@@ -262,6 +244,8 @@ if (!isset($_SESSION['username'])) {
 
 <script type="module">
     import * as THREE from "./assets/pages/js/indexPointCloud/libs/three.js/build/three.module.js";
+    import {PLYLoader} from "./assets/pages/js/indexPointCloud/libs/three.js/loaders/PLYLoader.js";
+    import {OBJLoader} from "./assets/pages/js/indexPointCloud/libs/three.js/loaders/OBJLoader.js";
 
     window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
 
@@ -276,28 +260,93 @@ if (!isset($_SESSION['username'])) {
     viewer.loadGUI(() => {
         viewer.setLanguage('en');
         $("#menu_appearance").next().show();
-        //viewer.toggleSidebar();
+        $("#menu_scene").next().show();
+        viewer.toggleSidebar();
     });
 
-    // Lion
-    Potree.loadPointCloud("assets/pages/js/indexPointCloud/data/my_pointclouds/dongthap/cloud.js", "dongthap", function(e){
+    Potree.loadPointCloud("assets/pages/js/indexPointCloud/data/my_pointclouds/dongthap/cloud.js", "dongthap", function (e) {
         viewer.scene.addPointCloud(e.pointcloud);
 
         let material = e.pointcloud.material;
         material.size = 1;
         material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 
-        viewer.fitToScreen();
+        //viewer.fitToScreen();
     });
 
-    Potree.loadPointCloud("assets/pages/js/indexPointCloud/data/my_pointclouds/vungtau/cloud.js", "vungtau", function(e){
-        viewer.scene.addPointCloud(e.pointcloud);
+    Potree.loadPointCloud("assets/pages/js/indexPointCloud/data/my_pointclouds/vungtau/cloud.js", "vungtau", function (e) {
+        let scene = viewer.scene;
+        scene.addPointCloud(e.pointcloud);
 
         let material = e.pointcloud.material;
         material.size = 1;
         material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 
-        viewer.fitToScreen();
+        scene.view.lookAt(new THREE.Vector3(640051.84, 1162075.08, 2.72));
+        // viewer.fitToScreen();
     });
+
+    {
+        let manager = new THREE.LoadingManager();
+        manager.onProgress = function (item, loaded, total) {
+            console.log(item, loaded, total);
+        };
+
+        let onProgress = function (xhr) {
+            if (xhr.lengthComputable) {
+                let percentComplete = xhr.loaded / xhr.total * 100;
+                console.log(Math.round(percentComplete, 2) + '% downloaded');
+            }
+        };
+        let onError = function (xhr) {
+        };
+
+        const texture = new THREE.TextureLoader().load(`assets/pages/js/indexPointCloud/data/obj/tesst_merge_90_va_70_u1_v1.png`);
+
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+
+        let loader = new OBJLoader(manager);
+        loader.load(`assets/pages/js/indexPointCloud/data/obj/tesst_merge_90_va_70.obj`, function (object) {
+            object.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.material.map = texture;
+                }
+            });
+
+            object.position.set(640051.84, 1162075.08, 2.72);
+            object.scale.multiplyScalar(500);
+            // object.rotation.set(Math.PI / 2, Math.PI, 0)
+            object.rotation.set(0, 0, 0)
+
+            viewer.scene.scene.add(object);
+
+            viewer.onGUILoaded(() => {
+                let tree = $(`#jstree_scene`);
+                let parentNode = "other";
+
+                let bunnyID = tree.jstree('create_node', parentNode, {
+                        text: "tesst_merge_90_va_70",
+                        data: object
+                    },
+                    "last", false, false);
+                tree.jstree(object.visible ? "check_node" : "uncheck_node", bunnyID);
+
+                tree.jstree("open_node", parentNode);
+            });
+
+        }, onProgress, onError);
+    }
+
+    { // LIGHTS
+        const directional = new THREE.DirectionalLight(0xffffff, 1.0);
+        directional.position.set(10, 10, 10);
+        directional.lookAt(0, 0, 0);
+
+        const ambient = new THREE.AmbientLight(0x555555);
+
+        viewer.scene.scene.add(directional);
+        viewer.scene.scene.add(ambient);
+    }
 </script>
 </body>

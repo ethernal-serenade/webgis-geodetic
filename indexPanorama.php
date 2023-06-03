@@ -29,9 +29,26 @@ if (!isset($_SESSION['username'])) {
     <link href="assets/app/css/animate.min.css" rel="stylesheet"/>
     <link href="assets/app/css/app.css" rel="stylesheet"/>
 
-    <!-- DEM CSS -->
-    <link href="assets/pages/js/indexDem/qgis2threejs/Qgis2threejs.css" rel="stylesheet"/>
-    <link href="assets/pages/js/indexDem/main.css" rel="stylesheet"/>
+    <!-- Map Plugins CSS -->
+    <link href="vendor/map/css/leaflet.css" rel="stylesheet"/>
+    <link href="vendor/map/css/leaflet.groupedlayercontrol.css" rel="stylesheet"/>
+    <link href="vendor/map/css/leaflet.zoomhome.css" rel="stylesheet"/>
+    <link href="vendor/map/css/leaflet-geoman.css" rel="stylesheet"/>
+    <link href="vendor/map/css/leaflet-gps.css" rel="stylesheet"/>
+    <link href="vendor/map/css/leaflet-measure.css" rel="stylesheet"/>
+    <link href="vendor/map/css/leaflet-sidebar.css" rel="stylesheet"/>
+    <link href="vendor/map/css/Control.FullScreen.css" rel="stylesheet"/>
+    <link href="vendor/map/css/Control.Geocoder.css" rel="stylesheet"/>
+    <link href="vendor/map/css/Control.LatLng.css" rel="stylesheet"/>
+    <link href="vendor/map/css/easy-button.css" rel="stylesheet"/>
+    <link href="vendor/map/css/L.Control.Basemaps.css" rel="stylesheet"/>
+    <link href="vendor/map/css/L.Control.Locate.css" rel="stylesheet"/>
+    <link href="vendor/map/css/L.Icon.Pulse.css" rel="stylesheet"/>
+    <link href="vendor/map/css/MarkerCluster.css" rel="stylesheet"/>
+
+    <!-- Map Custom CSS -->
+    <link href="assets/pages/css/mapStyle.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="assets/pages/js/indexPanorama/pannellum/pannellum.css">
 </head>
 
 <body>
@@ -201,165 +218,91 @@ if (!isset($_SESSION['username'])) {
 
             <div class="main-content">
                 <div class="full-container">
-                    <div id="view">
-                        <div id="labels"></div>
-                        <div id="northarrow"></div>
-                        <div id="navigation"></div>
-                    </div>
+                    <div id="map"></div>
                 </div>
             </div>
 
-            <div id="popup">
-                <div id="closebtn">&times;</div>
-                <div id="popupbar"></div>
-                <div id="popupbody">
-                    <div id="popupcontent"></div>
-
-                    <!-- query result -->
-                    <div id="queryresult">
-                        <table id="qr_layername_table" class="mt-3">
-                            <th>Layer name</th>
-                            <tr>
-                                <td id="qr_layername"></td>
-                            </tr>
-                        </table>
-
-                        <table id="qr_coords_table" class="mt-3">
-                            <th>Clicked coordinates</th>
-                            <tr>
-                                <td id="qr_coords"></td>
-                            </tr>
-                        </table>
-
-                        <!-- camera actions -->
-                        <!--<div class="action-btn action-zoom btn btn-sm btn-info mt-3"
-                             onclick="app.cameraAction.zoomIn(); app.closePopup();">
-                            Zoom in here
-                        </div>-->
-                        <div class="action-btn action-move btn btn-sm btn-info mt-3"
-                             onclick="app.cameraAction.move(); app.closePopup();">
-                            Move here
+            <div class="modal fade" id="panoramaModal"
+                 tabindex="-1" role="dialog"
+                 aria-labelledby="panoramaModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="width: 65rem; left: -15rem; top: 5rem">
+                        <div class="modal-header">
+                            <h4>Xem ảnh Panorama</h4>
                         </div>
-                        <div class="action-btn action-orbit btn btn-sm btn-info mt-3"
-                             onclick="app.cameraAction.orbit(); app.closePopup();">
-                            Orbit around here
+                        <div class="modal-body">
+                            <div id="panorama" style="width: 100%; height: 500px"></div>
                         </div>
-
-                        <!-- attributes -->
-                        <table id="qr_attrs_table">
-                            <caption>Attributes</caption>
-                        </table>
+                        <div class="modal-footer no-border">
+                            <div class="text-left">
+                                <button type="button" class="btn btn-primary" id="previousButton"><< Lùi lại</button>
+                                <button type="button" class="btn btn-primary" id="nextButton">Kế tiếp >></button>
+                            </div>
+                            <div class="text-right">
+                                <button class="btn btn-default btn-sm" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
                     </div>
-
-                    <!-- page info -->
-                    <div id="pageinfo">
-                        <h1>Current View URL</h1>
-                        <div><input id="urlbox" type="text"></div>
-
-                        <h1>Usage</h1>
-                        <table id="usage">
-                            <tr>
-                                <td colspan="2" class="star">Mouse</td>
-                            </tr>
-                            <tr>
-                                <td>Left button + Move</td>
-                                <td>Orbit</td>
-                            </tr>
-                            <tr>
-                                <td>Mouse Wheel</td>
-                                <td>Zoom</td>
-                            </tr>
-                            <tr>
-                                <td>Right button + Move</td>
-                                <td>Pan</td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="2" class="star">Keys</td>
-                            </tr>
-                            <tr>
-                                <td>Arrow keys</td>
-                                <td>Move Horizontally</td>
-                            </tr>
-                            <tr>
-                                <td>Shift + Arrow keys</td>
-                                <td>Orbit</td>
-                            </tr>
-                            <tr>
-                                <td>Ctrl + Arrow keys</td>
-                                <td>Rotate</td>
-                            </tr>
-                            <tr>
-                                <td>Shift + Ctrl + Up / Down</td>
-                                <td>Zoom In / Out</td>
-                            </tr>
-                            <tr>
-                                <td>L</td>
-                                <td>Toggle Label Visibility</td>
-                            </tr>
-                            <tr>
-                                <td>R</td>
-                                <td>Start / Stop Orbit Animation</td>
-                            </tr>
-                            <tr>
-                                <td>W</td>
-                                <td>Wireframe Mode</td>
-                            </tr>
-                            <tr>
-                                <td>Shift + R</td>
-                                <td>Reset Camera Position</td>
-                            </tr>
-                            <tr>
-                                <td>Shift + S</td>
-                                <td>Save Image</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- progress bar -->
-                <div id="progress">
-                    <div id="bar"></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="assets/app/js/vendor.js"></script>
-    <script src="assets/app/js/app.min.js"></script>
+<script src="assets/app/js/vendor.js"></script>
+<script src="assets/app/js/app.min.js"></script>
 
-    <!-- DEM JS -->
-    <script src="assets/pages/js/config.js"></script>
-    <script src="assets/pages/js/indexDem/threejs/three.min.js"></script>
-    <script src="assets/pages/js/indexDem/threejs/OrbitControls.js"></script>
-    <script src="assets/pages/js/indexDem/threejs/ViewHelper.js"></script>
-    <script src="assets/pages/js/indexDem/threejs/OutlineEffect.js"></script>
-    <script src="assets/pages/js/indexDem/proj4js/proj4.js"></script>
-    <script src="assets/pages/js/indexDem/qgis2threejs/Qgis2threejs.js"></script>
+<!-- Map Plugins JS -->
+<script src="vendor/map/js/leaflet.js"></script>
+<!--<script src="vendor/map/js/leaflet_old.js'"></script>
+<script src="vendor/map/js/leaflet-src.esm.js"></script>
+<script src="vendor/map/js/leaflet-src.esm.js.map"></script>
+<script src="vendor/map/js/leaflet-src.js"></script>
+<script src="vendor/map/js/leaflet-src.js.map"></script>
+<script src="vendor/map/js/leaflet.js.map"></script>
+<script src="vendor/map/js/leaflet.ajax.js"></script>-->
+<script src="vendor/map/js/leaflet.ajax.min.js"></script>
+<script src="vendor/map/js/leaflet.pattern.js"></script>
+<script src="vendor/map/js/Control.FullScreen.js"></script>
+<script src="vendor/map/js/Control.Geocoder.js"></script>
+<script src="vendor/map/js/Control.LatLng.js"></script>
+<script src="vendor/map/js/easy-button.js"></script>
+<script src="vendor/map/js/geojson-bbox.min.js"></script>
+<script src="vendor/map/js/L.Control.Basemaps-min.js"></script>
+<!--<script src="vendor/map/js/geojson-bbox.js"></script>
+<script src="vendor/map/js/geojson-bbox.js.map"></script>
+<script src="vendor/map/js/L.Control.Basemaps.js"></script>-->
+<script src="vendor/map/js/L.Control.Locate.js"></script>
+<script src="vendor/map/js/L.Geoserver.js"></script>
+<script src="vendor/map/js/L.Icon.Pulse.js"></script>
+<script src="vendor/map/js/L.Map.Sync.js"></script>
+<script src="vendor/map/js/rbush.js"></script>
+<script src="vendor/map/js/labelgun.js"></script>
+<script src="vendor/map/js/leaflet-bounce.js"></script>
+<script src="vendor/map/js/leaflet-geoman.min.js"></script>
+<!--<script src="vendor/map/js/leaflet-google.js"></script>
+<script src="vendor/map/js/leaflet-gps.js"></script>-->
+<script src="vendor/map/js/leaflet-measure.js"></script>
+<script src="vendor/map/js/leaflet-sidebar.js"></script>
+<script src="vendor/map/js/Leaflet.Control.Custom.js"></script>
+<script src="vendor/map/js/leaflet.groupedlayercontrol.js"></script>
+<script src="vendor/map/js/leaflet.markercluster.js"></script>
+<!--<script src="vendor/map/js/leaflet.markercluster-src.js"></script>
+<script src="vendor/map/js/leaflet.markercluster-src.js.map"></script>
+<script src="vendor/map/js/leaflet.markercluster.js.map"></script>-->
+<script src="vendor/map/js/leaflet.zoomhome.js"></script>
+<script src="vendor/map/js/geotiff.js"></script>
+<script src="vendor/map/js/plotty.js"></script>
+<script src="vendor/map/js/leaflet-geotiff.js"></script>
+<script src="vendor/map/js/leaflet.textpath.js"></script>
+<script src="vendor/map/js/leaflet.featuregroup.subgroup.js"></script>
+<script src="vendor/map/js/proj4.js"></script>
+<!--<script src="vendor/map/js/leaflet-geotiff-plotty.js"></script>
+<script src="vendor/map/js/leaflet-geotiff-vector-arrows.js"></script>-->
 
-    <script>
-        Q3D.Config.allVisible = true;
-        Q3D.Config.viewpoint = {
-            lookAt: {x: 743975.912670398, y: 1710354.996044841, z: 612.403076171875},
-            pos: {x: 744215.4570555881, y: 1712971.574306736, z: 2426.0455604225244}
-        };
-        Q3D.Config.localMode = true;
-        Q3D.Config.northArrow.enabled = true;
-        Q3D.Config.northArrow.color = 0x666666;
-
-        var container = document.getElementById("view"),
-            app = Q3D.application,
-            gui = Q3D.gui;
-
-        app.init(container); // initialize viewer
-
-        // load the scene
-        app.loadSceneFile("assets/pages/js/indexDem/data/scene.js", function (scene) {
-            // scene file has been loaded
-            app.start();
-        }, function (scene) {
-            // all relevant files have been loaded
-        });
-    </script>
-    <script src="assets/pages/js/indexDem/main.js"></script>
+<!-- Map Custom JS -->
+<script src="assets/pages/js/indexPanorama/pannellum/pannellum.js"></script>
+<script src="assets/pages/js/config.js"></script>
+<script src="assets/pages/js/index/index.js"></script>
+<script src="assets/pages/js/indexPanorama/main.js"></script>
 </body>

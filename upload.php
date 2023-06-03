@@ -49,30 +49,12 @@ if (!isset($_SESSION['username'])) {
                     </div>
                 </div>
                 <ul class="side-nav-menu scrollable">
-                    <li class="nav-item">
-                        <a class="mrg-top-15" href="index.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="indexPointCloud.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ PointCloud</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="" href="indexDem.php">
-                            <span class="icon-holder">
-                                <i class="ti-map-alt"></i>
-                            </span>
-                            <span class="title">Bản đồ DEM</span>
-                        </a>
-                    </li>
+                    <?php
+                    require_once('config-sidebar.php');
+                    if (isset($sidebar)) {
+                        echo $sidebar;
+                    }
+                    ?>
 
                     <?php
                     require_once('services/config.php');

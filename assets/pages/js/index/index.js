@@ -4,8 +4,8 @@ const vn2000_province = '';
 
 /*----- Geoserver -----*/
 var protocol = 'http://';
-var subdomain_geoserver = 'localhost:8080/';
-var subdomain_interpolation = 'localhost:8000/'
+/*var subdomain_geoserver = 'localhost:8080/';
+var subdomain_interpolation = 'localhost:8000/'*/
 /*var protocol = 'https://';
 var subdomain_geoserver = '10.151.46.88:8080/';
 var subdomain_geoserver = 'geo.projgis.link/';*/

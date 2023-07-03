@@ -11,12 +11,7 @@ load_dotenv()
 app = FastAPI()
 origins = [
     "http://localhost",
-    "http://localhost:81",
-    # "http://10.240.254.130:8099",
-    "http://210.245.96.134:82",
-    # "https://kong2_sinhthainambo.girs.vn/geodetic"
-    # "http://gisvn.info",
-    # "http://upload.gisvn.info"
+    "http://103.2.229.9",
 ]
 app.add_middleware(
     CORSMiddleware,

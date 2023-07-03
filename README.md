@@ -16,10 +16,10 @@ docker compose up -d
 ## TODO
 
 + [x] Method add `url` and convert to `menu-item` in webgis
-  + [ ] Authentication
+    + [ ] Authentication
 + [x] Show `panorama` each location
-  + [ ] Large file
-  + [ ] Upload paranoma image
+    + [ ] Large file
+    + [ ] Upload paranoma image
 + [x] Update `indexPointCloud.php` to load `.obj` data
 + [ ] Upload files `kml`, `kmz` or `dxf`
 + [ ] Upload file `tif`, `png` or `jpg` (have geometry)

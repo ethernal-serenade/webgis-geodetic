@@ -25,7 +25,7 @@ var services = '&style=' +
 
 /*----- Component Of Map -----*/
 /*--- Center of Map ---*/
-var center = [10.76532, 106.68164]
+var center = [11.72477, 109.0113]
 
 /*--- BaseMap Control ---*/
 var l_basemap_control = [

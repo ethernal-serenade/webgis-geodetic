@@ -1,6 +1,6 @@
 /*--- API URL---*/
 // var apiURL = 'http://localhost:5000/'
-var apiURL = 'http://210.245.96.134:5000/'
+var apiURL = 'http://103.2.229.9:5000/'
 var config_language_datatables = {
     pagingType: "full_numbers",
     search: '<span>Tìm kiếm:</span> _INPUT_',

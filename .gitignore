@@ -7,3 +7,4 @@ postgres/pgdata
 assets/pages/js/indexPointCloud/data
 assets/pages/js/indexDem/data
 assets/pages/js/indexPanorama/images
+services/config.php
